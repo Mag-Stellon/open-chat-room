@@ -1,28 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ChatRoomViewer/>
+    <ChatRoomWriter/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ChatRoomViewer from './components/ChatRoomViewer.vue'
+import ChatRoomWriter from './components/ChatRoomWriter.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    ChatRoomViewer,
+    ChatRoomWriter
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  font-family: 'Roboto', serif;
+  color: #fff;
+  background-image: radial-gradient(circle, #a03759, #9d3657, #9a3455, #983354, #953252, #913150, #8e2f4e, #8a2e4c, #842c49, #7e2a45, #792942, #73273f);
+}
+
+html {
+  min-height: 100%;
+  min-width: 320px;
+}
+
+#app { 
+  margin: 20px;
 }
 </style>
