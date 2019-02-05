@@ -5,10 +5,10 @@ const API = axios.create({
 })
 
 export default {
-    getMessages() {
+    getMessages () {
         return API.get('messages');
     },
-    postMessage(message) {
-        return API.post('message', { body: message });
+    postMessages (message) {
+        return API.post('message', message);
     }
 }

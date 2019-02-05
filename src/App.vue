@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <ChatRoomViewer/>
-    <ChatRoomWriter/>
+    <ChatViewer/>
+    <ChatWriter/>
   </div>
 </template>
 
 <script>
-import ChatRoomViewer from './components/ChatRoomViewer.vue'
-import ChatRoomWriter from './components/ChatRoomWriter.vue'
+import ChatViewer from './components/ChatViewer.vue'
+import ChatWriter from './components/ChatWriter.vue'
 
 export default {
   name: 'app',
   components: {
-    ChatRoomViewer,
-    ChatRoomWriter
+    ChatViewer,
+    ChatWriter
   }
 }
 </script>
