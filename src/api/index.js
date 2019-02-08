@@ -9,6 +9,6 @@ export default {
         return API.get('messages');
     },
     postMessages (message) {
-        return API.post('message', message);
+        return API.post('messages', message);
     }
 }

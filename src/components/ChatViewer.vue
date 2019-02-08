@@ -12,7 +12,7 @@
 
                     <v-list-tile-content class="list-content">
                         <v-list-tile-title v-html="message.id"></v-list-tile-title>
-                        <v-list-tile-sub-title v-html="decodeMessage(message.content)"></v-list-tile-sub-title>
+                        <v-list-tile-sub-title v-html="message.content"></v-list-tile-sub-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </template>
@@ -21,26 +21,58 @@
 </template>
 
 <script>
-import API from '../api';
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 export default {
     name: 'ChatViewer',
     data() {
         return {
-            messages: []
+            socket: null,
+            messages: [],
+            send_message: 'hello',
+            connected: false
         }
-    },
-    created() {
-        var that = this;
-        API.getMessages()
-        .then(response => {
-            that.messages = response.data;
-        });
     },
     methods: {
-        decodeMessage(message){
-            return decodeURI(message);
+        send() {
+            console.log("Send message:" + this.send_message);
+            if (this.socket && this.socket.connected) {
+                const msg = { content: this.send_message };
+                this.socket.send("/app/messages", JSON.stringify(msg), {});
+            }
+        },
+        connect() {
+            this.socket = Stomp.over( new SockJS("http://localhost:8080/gs-guide-websocket"));
+            this.socket.connect(
+                {},
+                frame => {
+                    this.connected = true;
+                    console.log(frame);
+                    this.socket.subscribe("/topic/messages", tick => {
+                        console.log(tick);
+                        this.messages.push(JSON.parse(tick.body).content);
+                    });
+                },
+                error => {
+                    console.log(error);
+                    this.connected = false;
+                }
+            );
+        },
+        disconnect() {
+            if (this.socket) {
+                this.stompClient.disconnect();
+            }
+            this.connected = false;
+        },
+        tickleConnection() {
+            this.connected ? this.disconnect() : this.connect();
         }
+    },
+    mounted() {
+        this.connect();
+        this.send();
     }
 }
 </script>

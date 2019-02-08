@@ -6,31 +6,64 @@
             label="Type your message ..."
             append-icon="send"
             v-model="message"
-            @click:append="submit"
+            @click:append="send"
         ></v-text-field>
 
     </div>
 </template>
 
 <script>
-import API from '../api';
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 export default {
     name: 'ChatWriter',
     data() {
         return {
-            message: ''
+            message: '',
+            socket: null,
+            messages: [],
+            connected: false
         }
     },
     methods: {
-        submit() {
-            API.postMessages(this.encodedMessage);
-        }
+        send() {
+            console.log("Send message:" + this.message);
+            if (this.socket && this.socket.connected) {
+                const msg = { content: this.message };
+                this.socket.send("/app/messages", JSON.stringify(msg), {});
+            }
+        },
+        connect() {
+            this.socket = Stomp.over( new SockJS("http://localhost:8080/gs-guide-websocket"));
+            this.socket.connect(
+                {},
+                frame => {
+                    this.connected = true;
+                    console.log(frame);
+                    this.socket.subscribe("/topic/messages", tick => {
+                        console.log(tick);
+                        this.messages.push(JSON.parse(tick.body).content);
+                    });
+                },
+                error => {
+                    console.log(error);
+                    this.connected = false;
+                }
+            );
+        },
+        disconnect() {
+            if (this.socket) {
+                this.stompClient.disconnect();
+            }
+            this.connected = false;
+        },
+        tickleConnection() {
+            this.connected ? this.disconnect() : this.connect();
+        }        
     },
-    computed: {
-        encodedMessage() {
-            return encodeURI(this.message);
-        }
+    mounted() {
+        this.connect();
     }
 }
 </script>
