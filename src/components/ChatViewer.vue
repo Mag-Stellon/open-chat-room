@@ -30,28 +30,19 @@ export default {
         return {
             socket: null,
             messages: [],
-            send_message: 'hello',
             connected: false
         }
     },
     methods: {
-        send() {
-            console.log("Send message:" + this.send_message);
-            if (this.socket && this.socket.connected) {
-                const msg = { content: this.send_message };
-                this.socket.send("/app/messages", JSON.stringify(msg), {});
-            }
-        },
         connect() {
-            this.socket = Stomp.over( new SockJS("http://localhost:8080/gs-guide-websocket"));
+            this.socket = Stomp.over( new SockJS("http://localhost:8080/gs-guide-websocket"), {protocols: 'v12.stomp', debug: true});
             this.socket.connect(
                 {},
                 frame => {
                     this.connected = true;
                     console.log(frame);
                     this.socket.subscribe("/topic/messages", tick => {
-                        console.log(tick);
-                        this.messages.push(JSON.parse(tick.body).content);
+                        this.messages.push(JSON.parse(tick.body));
                     });
                 },
                 error => {
@@ -72,13 +63,13 @@ export default {
     },
     mounted() {
         this.connect();
-        this.send();
     }
 }
 </script>
 
 <style lang="scss">
 #chat-viewer {
+    background-color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 2px;
     margin-bottom: 20px;

@@ -22,32 +22,24 @@ export default {
         return {
             message: '',
             socket: null,
-            messages: [],
             connected: false
         }
     },
     methods: {
         send() {
-            console.log("Send message:" + this.message);
             if (this.socket && this.socket.connected) {
                 const msg = { content: this.message };
                 this.socket.send("/app/messages", JSON.stringify(msg), {});
             }
         },
         connect() {
-            this.socket = Stomp.over( new SockJS("http://localhost:8080/gs-guide-websocket"));
+            this.socket = Stomp.over(new SockJS("http://localhost:8080/gs-guide-websocket"), {protocols: 'v12.stomp', debug: true});
             this.socket.connect(
                 {},
                 frame => {
                     this.connected = true;
-                    console.log(frame);
-                    this.socket.subscribe("/topic/messages", tick => {
-                        console.log(tick);
-                        this.messages.push(JSON.parse(tick.body).content);
-                    });
                 },
                 error => {
-                    console.log(error);
                     this.connected = false;
                 }
             );
