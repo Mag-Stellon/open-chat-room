@@ -1,36 +1,38 @@
 <template>
-  <div id="app">
-    <ChatViewer/>
-    <ChatWriter/>
+  <div id="chat">
+    <Viewer/>
+    <Writer/>
   </div>
 </template>
 
 <script>
-import ChatViewer from './components/ChatViewer.vue'
-import ChatWriter from './components/ChatWriter.vue'
+import Viewer from './components/Viewer.vue'
+import Writer from './components/Writer.vue'
 
 export default {
   name: 'app',
   components: {
-    ChatViewer,
-    ChatWriter
+    Viewer,
+    Writer
   }
 }
 </script>
 
 <style>
 body {
+  height: 100%;
   font-family: 'Roboto', serif;
   color: #fff;
   background-image: radial-gradient(circle, #a03759, #9d3657, #9a3455, #983354, #953252, #913150, #8e2f4e, #8a2e4c, #842c49, #7e2a45, #792942, #73273f);
 }
 
 html {
-  min-height: 100%;
+  height: 100%;
   min-width: 320px;
 }
 
-#app { 
-  margin: 20px;
+#chat { 
+  height: 100%;
+  padding: 20px;
 }
 </style>
