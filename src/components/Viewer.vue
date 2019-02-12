@@ -18,8 +18,8 @@ export default {
         return {
             messages: [],
             stomp: new Client({
-                brokerURL: 'ws://localhost:8080/chat',
-                onConnect: () =>  this.stomp.subscribe('/channel/public', (message) => { this.messages.push(JSON.parse(message.body)) })
+                brokerURL: process.env.VUE_APP_BROKER_URL,
+                onConnect: () =>  this.stomp.subscribe(process.env.VUE_APP_CHANNEL, (message) => { this.messages.push(JSON.parse(message.body)) })
             })
         }
     },

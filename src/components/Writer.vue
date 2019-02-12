@@ -21,13 +21,13 @@ export default {
         return {
             message: '',
             stomp: new Client({
-                brokerURL: 'ws://localhost:8080/chat'
+                brokerURL: process.env.VUE_APP_BROKER_URL
             })
         }
     },
     methods: {
         send() {
-            this.stomp.publish({destination: '/public', body: this.serializeMessage()});
+            this.stomp.publish({destination: process.env.VUE_APP_SEND, body: this.serializeMessage()});
             this.message = '';
         },
         serializeMessage(){
