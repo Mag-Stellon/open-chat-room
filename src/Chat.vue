@@ -35,4 +35,11 @@ html {
   height: 100%;
   padding: 20px;
 }
+
+@media screen and (min-width: 736px) {
+  #chat {
+    padding: 20px 20%;
+  }
+}
+
 </style>
